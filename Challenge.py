@@ -9,6 +9,7 @@ from sklearn.cluster import KMeans
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
 
 def read_image(path):
@@ -176,9 +177,14 @@ def max_contour(image):
 
 
 def main():
-    segmentation = cv2.imread(r'D:\IC3\107-opt.png')
+    try:
+        image = sys.argv[1]
+        segmentation = cv2.imread(sys.argv[2])
+    except:
+        print('Requires command line argument')
+        sys.exit(1)
 
-    cale_r = r'D:\IC3\107-HU.in'
+    cale_r = image
 
     image = read_image(cale_r)
     copy = np.array(image, copy=True)

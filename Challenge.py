@@ -176,10 +176,23 @@ def max_contour(image):
     return contour
 
 
+def write_output(image):
+    """
+    @image: numpy.array
+    Writes the output image.
+    """
+    with open("optim.out", "w") as f:
+        for i in range(image.shape[0]):
+            for j in range(image.shape[1]):
+                f.write(str(image[i][j]) + ' ')
+            f.write('\n')
+    f.close()
+
+
 def main():
     try:
         image = sys.argv[1]
-        segmentation = cv2.imread(sys.argv[2])
+        segmentation_path = sys.argv[2]
     except:
         print('Requires command line argument')
         sys.exit(1)
@@ -188,6 +201,7 @@ def main():
 
     image = read_image(cale_r)
     copy = np.array(image, copy=True)
+    segmented_image = read_image(segmentation_path)
 
     # output from first processing
     thresh_map = first_processing(image)
@@ -209,7 +223,13 @@ def main():
     output = cv2.drawContours(gray_to_rgb, contour, -1, (0, 255, 0), 3)
 
     # plots the output
-    plot2figures(output, segmentation)
+    plot2figures(output, segmented_image)
+
+    # transform output from bgr to grayscale
+    output = cv2.cvtColor(output, cv2.COLOR_BGR2GRAY)
+
+    # write optim.out
+    write_output(output)
 
 
 if __name__ == "__main__":
